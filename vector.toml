@@ -9,6 +9,10 @@ inputs = ["log_file"]
 source = '''
 parsed = parse_grok!(.message, "%{TIMESTAMP_ISO8601:timestamp} \\[%{WORD:level}\\] %{GREEDYDATA:message}")
 
+if parsed.level != "warning" && parsed.level != "error" {
+  abort
+}
+
 .timestamp = parse_timestamp!(parsed.timestamp, "%Y-%m-%dT%H:%M:%SZ")
 .level = parsed.level
 .log_message = parsed.message

@@ -34,6 +34,7 @@ def consume_logs():
     """Consume logs from Kafka topic in real-time."""
     consumer = Consumer(consumer_config)
     consumer.subscribe([KAFKA_TOPIC])
+    num_logs = 0
 
     try:
         print(f"Listening for logs on topic: {KAFKA_TOPIC}...\n")
@@ -50,7 +51,8 @@ def consume_logs():
                     continue
             
             log_message = msg.value().decode('utf-8').strip()
-            print(f"✅ Parsed Log: {log_message}")
+            num_logs += 1
+            print(f"✅ Parsed Log {num_logs}: {log_message}")
 
 
     except KeyboardInterrupt:
@@ -60,16 +62,3 @@ def consume_logs():
 
 if __name__ == "__main__":
     consume_logs()
-
-
-
-d = {
-    "file":"/logs/output.log",
-    "host":"d34ac78ac48d",
-    "level":"warning",
-    "log_message":"HvdD2P5ZFm1EhJkXkPYy9eOMyhIL7wYD96AIfaCROQy3z1XkgEaaRB8bcnFsVgeFWcCoIqf3dJPijJA7rc7ovmFrkMDZCjQSDMH06CPbk4m22kV9Mcmznv7wMHDBRsgQD3K50h2tIXBkhN9lxAVHCcPpyAsUBEuhDkBq5pOCKH4BKYKZuQqfldA1eJIpwoY9BoVyQ8wV",
-    "message":"2025-02-25T10:43:00Z [warning] HvdD2P5ZFm1EhJkXkPYy9eOMyhIL7wYD96AIfaCROQy3z1XkgEaaRB8bcnFsVgeFWcCoIqf3dJPijJA7rc7ovmFrkMDZCjQSDMH06CPbk4m22kV9Mcmznv7wMHDBRsgQD3K50h2tIXBkhN9lxAVHCcPpyAsUBEuhDkBq5pOCKH4BKYKZuQqfldA1eJIpwoY9BoVyQ8wV",
-    "source":"log-generator",
-    "source_type":"file",
-    "timestamp":"2025-02-25T10:43:00Z"
-}
