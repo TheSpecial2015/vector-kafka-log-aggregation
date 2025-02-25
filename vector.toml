@@ -1,0 +1,30 @@
+[sources.log_file]
+type = "file"
+include = ["/logs/output.log"]
+read_from = "beginning"
+
+[transforms.parse_logs]
+type = "remap"
+inputs = ["log_file"]
+source = '''
+parsed = parse_grok!(.message, "%{TIMESTAMP_ISO8601:timestamp} \\[%{WORD:level}\\] %{GREEDYDATA:message}")
+
+.timestamp = parse_timestamp!(parsed.timestamp, "%Y-%m-%dT%H:%M:%SZ")
+.level = parsed.level
+.log_message = parsed.message
+
+.source = "log-generator"
+'''
+
+[sinks.console]
+type = "console"
+inputs = ["parse_logs"]
+encoding.codec = "json"
+
+[sinks.kafka_out]
+type = "kafka"
+inputs = ["parse_logs"]
+bootstrap_servers = "kafka:9092"
+topic = "logs"
+encoding.codec = "json"
+compression = "snappy"
