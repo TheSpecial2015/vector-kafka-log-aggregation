@@ -1,5 +1,3 @@
-
-
 # Vector-Kafka Log Aggregation
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/TheSpecial2015/vector-kafka-log-aggregation)
@@ -8,6 +6,7 @@
 This project demonstrates a lightweight log aggregation pipeline using [Vector](https://vector.dev/), [Apache Kafka](https://kafka.apache.org/), and [ZooKeeper](https://zookeeper.apache.org/). Logs are generated, parsed, and sent to a Kafka topic for downstream processing or analysis. The entire setup runs in Docker containers orchestrated by Docker Compose, making it easy to spin up for development or testing.
 
 ## Features
+
 - **Log Generation**: Custom log generator producing structured logs at a configurable rate.
 - **Log Parsing**: Vector parses logs into timestamp, level, and message fields using Grok patterns.
 - **Kafka Integration**: Logs are aggregated into a Kafka topic with Snappy compression.
@@ -15,15 +14,19 @@ This project demonstrates a lightweight log aggregation pipeline using [Vector](
 - **Dockerized**: Fully containerized with `wurstmeister/kafka` and `wurstmeister/zookeeper`.
 
 ## Architecture
+
 ### Workflow Diagram
 
-<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/diagram.png" alt="diagram" width="850" height="436" />
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/diagram.png" alt="architecture diagram" width="850" height="436" />
 
 1. The log generator writes logs to `/logs/output.log`.
 2. Vector reads, parses, and forwards them as JSON to Kafka’s `logs` topic.
 3. Kafka stores the messages, coordinated by ZooKeeper.
 4. Consumers (not included) can read from the `logs` topic.
 
+### The Pipeline Latency :
+
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/latency.png" alt="latency metric" width="850" height="436" />
 ## Prerequisites
 - [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
 - [Git](https://git-scm.com/downloads)
@@ -32,6 +35,7 @@ This project demonstrates a lightweight log aggregation pipeline using [Vector](
 ## Getting Started
 
 ### Clone the Repository
+
 ```bash
 git clone https://github.com/TheSpecial2015/vector-kafka-log-aggregation.git
 cd vector-kafka-log-aggregation

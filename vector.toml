@@ -2,6 +2,8 @@
 type = "file"
 include = ["/logs/output.log"]
 read_from = "beginning"
+glob_minimum_cooldown_ms = 10  # Poll every 10ms (was polling_interval_secs)
+max_read_bytes = 2048       # Read up to 2KB at a time        
 
 [transforms.parse_logs]
 type = "remap"
@@ -32,3 +34,11 @@ bootstrap_servers = "kafka:9092"
 topic = "logs"
 encoding.codec = "json"
 compression = "snappy"
+batch.max_events = 1          # Send each event instantly
+batch.timeout_secs = 0.01     # Flush every 10ms if not sent
+
+# Add the following section to enable the HTTP API
+# Thi section is optional but certainly useful
+[api]
+enabled = true
+address = "0.0.0.0:8686"

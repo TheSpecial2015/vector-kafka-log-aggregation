@@ -44,6 +44,10 @@ services:
       - KAFKA_CREATE_TOPICS=logs:1:1
       - KAFKA_LISTENERS=PLAINTEXT://:9092
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_LINGER_MS=1 # 1ms linger
+      - KAFKA_BUFFER_MEMORY=33554432 # 32MB, plenty for 5 msg/sec
+      - KAFKA_NUM_NETWORK_THREADS=3 # Handle small load fast
+      - KAFKA_NUM_IO_THREADS=8 # Handle small load fast
     depends_on:
       zookeeper:
         condition: service_healthy

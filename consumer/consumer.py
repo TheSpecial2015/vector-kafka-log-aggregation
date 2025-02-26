@@ -1,4 +1,6 @@
 from confluent_kafka import Consumer, KafkaError
+from datetime import datetime
+import json
 import re
 
 # Kafka Configuration
@@ -10,25 +12,21 @@ GROUP_ID = "log-consumer"
 consumer_config = {
     'bootstrap.servers': KAFKA_BROKER,
     'group.id': GROUP_ID,
-    'auto.offset.reset': 'earliest'  # Change to 'latest' to get only new logs
+    'auto.offset.reset': 'latest',  # Change to 'latest' to get only new logs
+    'fetch.min.bytes': 1,         # Fetch even 1 byte ASAP
+    'fetch.wait.max.ms': 10       # Wait max 10ms for data to arrive
 }
 
-# Regex pattern to parse log entries
-LOG_PATTERN = re.compile(r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z) \[(\w+)\] (\S+) (\S+) (\S+)')
+# Calculate Time Difference
+def time_diff(timestamp):
+    """
+    Calculate the time difference between the log timestamp and the current time in seconds.
+    """
+    log_time = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    now = datetime.utcnow()
 
-def parse_log(log_message):
-    """Parse a log message using regex."""
-    match = LOG_PATTERN.search(log_message)
-    if match:
-        timestamp, level, first_string, second_string, third_string = match.groups()
-        return {
-            "timestamp": timestamp,
-            "level": level,
-            "first_string": first_string,
-            "second_string": second_string,
-            "third_string": third_string
-        }
-    return None
+    time_diff = now - log_time
+    return time_diff.total_seconds()
 
 def consume_logs():
     """Consume logs from Kafka topic in real-time."""
@@ -51,8 +49,11 @@ def consume_logs():
                     continue
             
             log_message = msg.value().decode('utf-8').strip()
+            log_data = json.loads(log_message)
+
+            time_difference = time_diff(log_data["timestamp"])
             num_logs += 1
-            print(f"✅ Parsed Log {num_logs}: {log_message}")
+            print(f"✅Log {num_logs}: {time_difference} seconds")
 
 
     except KeyboardInterrupt:
