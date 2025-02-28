@@ -42,3 +42,13 @@ batch.timeout_secs = 0.01     # Flush every 10ms if not sent
 [api]
 enabled = true
 address = "0.0.0.0:8686"
+
+# Add the following section to enable the Prometheus exporter
+# This section is optional but certainly useful
+[sources.internal_metrics]
+type = "internal_metrics"
+
+[sinks.prometheus]
+type = "prometheus_exporter"
+inputs = ["internal_metrics"]
+address = "0.0.0.0:9598"
