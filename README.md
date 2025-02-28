@@ -26,7 +26,7 @@ This project demonstrates a lightweight log aggregation pipeline using [Vector](
 
 ### The Pipeline Latency :
 
-<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/latency.png" alt="latency metric" width="250" height="150" />
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/latency.png" alt="latency metric" width="300" height="150" />
 
 ### The Pipeline Ressource Consumption :
 
