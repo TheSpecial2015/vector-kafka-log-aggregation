@@ -70,16 +70,27 @@ services:
     networks:
       - logs-network
 
-  python-consumer:
-    build: ./consumer
-    container_name: python-consumer
+  go-consumer:
+    build:
+      context: ./go-consumer
+      dockerfile: Dockerfile
     depends_on:
       - kafka
     environment:
       - KAFKA_BROKER=kafka:9092
-    restart: unless-stopped
     networks:
       - logs-network
+
+  # python-consumer:
+  #   build: ./consumer
+  #   container_name: python-consumer
+  #   depends_on:
+  #     - kafka
+  #   environment:
+  #     - KAFKA_BROKER=kafka:9092
+  #   restart: unless-stopped
+  #   networks:
+  #     - logs-network
 
 networks:
   logs-network:

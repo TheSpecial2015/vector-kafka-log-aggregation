@@ -27,7 +27,13 @@ This project demonstrates a lightweight log aggregation pipeline using [Vector](
 ### The Pipeline Latency :
 
 <img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/latency.png" alt="latency metric" width="250" height="150" />
+
+### The Pipeline Ressource Consumption :
+
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/ressource_stats.png.png" alt="latency metric" width="250" height="150" />
+
 ## Prerequisites
+
 - [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
 - [Git](https://git-scm.com/downloads)
 - Basic familiarity with Kafka and Vector

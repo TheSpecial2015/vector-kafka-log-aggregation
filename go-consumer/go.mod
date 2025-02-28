@@ -1,6 +1,6 @@
-module github.com/vector-test
+module github.com/go-kafka-consumer
 
-go 1.23
+go 1.23.4
 
 require (
 	github.com/IBM/sarama v1.45.0 // indirect
