@@ -30,7 +30,7 @@ This project demonstrates a lightweight log aggregation pipeline using [Vector](
 
 ### The Pipeline Ressource Consumption :
 
-<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/ressource_stats.png" alt="ressource metric" width="250" height="150" />
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/ressource_stats.png" alt="ressource metric" width="750" height="100" />
 
 ## Prerequisites
 
