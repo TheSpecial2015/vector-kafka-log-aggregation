@@ -15,8 +15,12 @@ if parsed.level != "warning" && parsed.level != "error" {
   abort
 }
 
+.host = "n1.m1.c1"
+.ipaddr = "10.10.166.254"
 .timestamp = parse_timestamp!(parsed.timestamp, "%Y-%m-%dT%H:%M:%SZ")
 .level = parsed.level
+.pid = "214043"
+.thread = "dfs.DataNode/DataXceiver"
 .message = parsed.message
 
 .source = "log-generator"

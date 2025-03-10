@@ -3,7 +3,11 @@ module github.com/go-kafka-consumer
 go 1.23.4
 
 require (
-	github.com/IBM/sarama v1.45.0 // indirect
+	github.com/IBM/sarama v1.45.0
+	github.com/gorilla/websocket v1.5.3
+)
+
+require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect

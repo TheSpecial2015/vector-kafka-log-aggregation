@@ -79,7 +79,6 @@ func generateLogs(output *os.File, totalMessages, msgPerSec int64, payloadSize i
 	ticker := time.NewTicker(logInterval)
 	defer ticker.Stop()
 
-	rand.Seed(time.Now().UnixNano())
 	logLevels := []string{"info", "warning", "error", "debug"}
 	count := int64(0)
 

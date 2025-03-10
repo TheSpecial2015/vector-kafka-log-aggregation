@@ -76,9 +76,35 @@ services:
       dockerfile: Dockerfile
     container_name: go-consumer
     depends_on:
+      #- redis
       - kafka
     environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=admin
       - KAFKA_BROKER=kafka:9092
+    networks:
+      - logs-network
+
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --requirepass "admin" # Optional: adds authentication
+  #   networks:
+  #     - logs-network
+
+  sveltekit-app:
+    build:
+      context: ./svelte-dashboard
+      dockerfile: Dockerfile
+    container_name: sveltekit_app
+    ports:
+      - "3000:3000" # Maps host port 3000 to container port 3000
+    environment:
+      - NODE_ENV=production # Set to 'development' for dev mode
+      - VITE_API_URL=http://localhost:3000/api # Example env var for SvelteKit
     networks:
       - logs-network
 
