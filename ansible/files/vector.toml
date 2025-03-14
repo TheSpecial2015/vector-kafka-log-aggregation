@@ -1,0 +1,44 @@
+[sources.log_file]
+type = "file"
+include = ["/var/log/hadoop/hadoop.log"]
+read_from = "end"
+glob_minimum_cooldown_ms = 10  # ~Poll every 10ms
+max_read_bytes = 2048          # ~2KB reads
+
+[transforms.parse_logs]
+type = "remap"
+inputs = ["log_file"]
+source = '''
+parsed = parse_grok!(.message, "%{TIMESTAMP_ISO8601:timestamp}, %{NUMBER:pid} %{WORD:level} %{DATA:thread}: %{GREEDYDATA:message}")
+
+if parsed.level != "WARN" && parsed.level != "ERROR" {
+  abort
+}
+
+.host = get_env_var("HOSTNAME") ?? "unknown"
+.ipaddr = get_env_var("IPADDR") ?? "unknown"
+.timestamp = parse_timestamp!(parsed.timestamp, "%Y-%m-%dT%H:%M:%S%.fZ")
+.level = parsed.level
+.pid = parsed.pid
+.thread = parsed.thread
+.message = parsed.message
+
+# Construct dynamic Kafka topic
+.kafka_topic = "c1-" + .host + "-logs"
+'''
+
+[sinks.kafka_out]
+type = "kafka"
+inputs = ["parse_logs"]
+bootstrap_servers = "kafka:9092"
+topic = "{{ kafka_topic }}" # "c1-datanode1-logs"
+encoding.codec = "json"
+compression = "snappy"
+batch.max_events = 1          # Send each event instantly
+batch.timeout_secs = 0.01     # Flush every 10ms if not sent
+
+# Add the following section to enable the HTTP API
+# Thi section is optional but certainly useful
+[api]
+enabled = true
+address = "0.0.0.0:8686"

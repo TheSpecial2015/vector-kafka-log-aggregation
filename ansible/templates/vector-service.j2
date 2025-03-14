@@ -1,0 +1,44 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          vector
+# Required-Start:    $network
+# Required-Stop:     $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Vector observability pipeline
+# Description:       Vector observability pipeline
+### END INIT INFO
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Vector observability pipeline"
+NAME=vector
+DAEMON=/usr/local/vector-x86_64-unknown-linux-musl/bin/vector
+DAEMON_ARGS="--config /etc/vector/vector.toml"
+PIDFILE=/var/run/vector.pid
+
+case "$1" in
+  start)
+    echo "Starting $DESC"
+    if [ ! -f /etc/vector/vector.toml ]; then
+      echo "Vector config file /etc/vector/vector.toml not found!"
+      exit 1
+    fi
+    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --exec $DAEMON -- $DAEMON_ARGS
+    ;;
+  stop)
+    echo "Stopping $DESC"
+    start-stop-daemon --stop --pidfile $PIDFILE
+    rm -f $PIDFILE
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

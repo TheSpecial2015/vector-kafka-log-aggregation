@@ -1,0 +1,24 @@
+#!/sbin/openrc-run
+
+description="Vector observability pipeline"
+command="/usr/local/vector-x86_64-unknown-linux-musl/bin/vector"
+command_args="--config /etc/vector/vector.toml"
+pidfile="/var/run/vector.pid"
+command_background="yes"
+
+depend() {
+    need net
+}
+
+start_pre() {
+    # Ensure the config file exists
+    if [ ! -f /etc/vector/vector.toml ]; then
+        eerror "Vector config file /etc/vector/vector.toml not found!"
+        return 1
+    fi
+}
+
+stop() {
+    pkill -f "$command $command_args" || true
+    return 0
+}

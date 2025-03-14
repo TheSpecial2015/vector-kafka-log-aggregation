@@ -1,0 +1,109 @@
+---
+- name: Deploy Vector to HawkEye simulation nodes
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install prerequisites
+      apk:
+        update_cache: yes
+        name:
+          - curl
+          - tar
+        state: present
+
+    - name: Download Vector
+      get_url:
+        url: "https://packages.timber.io/vector/0.45.0/vector-0.45.0-x86_64-unknown-linux-musl.tar.gz"
+        dest: "/tmp/vector.tar.gz"
+
+    - name: Extract Vector
+      unarchive:
+        src: "/tmp/vector.tar.gz"
+        dest: "/usr/local"
+        remote_src: yes
+        creates: "/usr/local/vector-0.45.0-x86_64-unknown-linux-musl"
+
+    - name: Find Vector binary
+      command: find /usr/local -name vector -type f
+      register: vector_binary
+      changed_when: false
+
+    - name: Debug vector binary path
+      debug:
+        var: vector_binary.stdout_lines
+
+    - name: Fail if Vector binary not found
+      fail:
+        msg: "Vector binary not found after extraction"
+      when: vector_binary.stdout_lines | length == 0
+
+    - name: Test Vector binary execution
+      command: "{{ vector_binary.stdout_lines[0] }} --version"
+      register: vector_version
+      changed_when: false
+
+    - name: Debug Vector version
+      debug:
+        var: vector_version.stdout
+
+    - name: Create symlink to Vector binary
+      file:
+        src: "{{ vector_binary.stdout_lines[0] }}"
+        dest: "/usr/local/bin/vector"
+        state: link
+      when: vector_binary.stdout_lines | length > 0
+
+    - name: Create Vector config directory
+      file:
+        path: "/etc/vector"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create Vector config sub directory
+      file:
+        path: "/etc/vector/config.d"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create Vector var lib directory
+      file:
+        path: "/var/lib/vector"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Create Vector log directory
+      file:
+        path: "/var/log/vector"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy Vector config
+      copy:
+        src: vector.toml
+        dest: "/etc/vector/vector.toml"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Test Vector config
+      command: "/usr/local/bin/vector validate --config /etc/vector/vector.toml"
+      register: vector_config_validate
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Debug Vector config validation
+      debug:
+        var: vector_config_validate
+
+    - name: Clean up temporary files
+      file:
+        path: "/tmp/vector.tar.gz"
+        state: absent
