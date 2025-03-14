@@ -17,11 +17,11 @@ This project demonstrates a lightweight log aggregation pipeline using [Vector](
 
 ### Workflow Diagram
 
-<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/diagram-v2.png" alt="architecture diagram" width="1074" height="709" />
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/ansible/diagram-v2.png" alt="architecture diagram" width="1074" height="709" />
 
 ### Dashboard
 
-<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/logs-dashboard.png" alt="architecture diagram" width="635" height="335" />
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/ansible/logs-dashboard.png" alt="architecture diagram" width="635" height="335" />
 
 1. The log generator writes logs to `/logs/output.log`.
 2. Vector reads, parses, and forwards them as JSON to Kafka’s `logs` topic.
@@ -34,7 +34,7 @@ This project demonstrates a lightweight log aggregation pipeline using [Vector](
 
 ### The Pipeline Ressource Consumption :
 
-<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/main/ressource-stats.png" alt="ressource metric" width="750" height="200" />
+<img src="https://github.com/TheSpecial2015/vector-kafka-log-aggregation/blob/ansible/resource-stats.png" alt="ressource metric" width="750" height="200" />
 
 ## Prerequisites
 
